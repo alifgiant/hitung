@@ -10,13 +10,19 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const whiteText = const TextStyle(color: HitungColor.white);
+    const whiteText = TextStyle(color: HitungColor.white);
+    const snowText = TextStyle(color: Color(0xff3c3c3c));
     return MaterialApp(
       title: 'Hitung',
       theme: ThemeData(
+        scaffoldBackgroundColor: HitungColor.black,
+        appBarTheme: AppBarTheme(
+          backgroundColor: HitungColor.black,
+          toolbarTextStyle: snowText,
+          titleTextStyle: snowText,
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Color(0xff9A4532), // kula color
         ),
@@ -40,7 +46,6 @@ class MyApp extends StatelessWidget {
           focusedBorder: InputBorder.none,
           isDense: true,
         ),
-        scaffoldBackgroundColor: HitungColor.black,
         useMaterial3: true,
       ),
       home: const MainPage(),

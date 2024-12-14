@@ -8,9 +8,11 @@ class NoteTextController extends TextEditingController {
   NoteTextController({
     CalcContextProvider? calcContextProvider,
   }) : calcContextProvider = calcContextProvider ?? CalcContextProvider() {
-    addListener(() => this.calcContextProvider.onLineChanged(text));
+    addListener(() {
+      this.calcContextProvider.onLineChanged(text);
+    });
   }
-  
+
   @override
   TextSpan buildTextSpan({
     required BuildContext context,

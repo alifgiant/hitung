@@ -23,6 +23,7 @@ class _NoteScreenState extends State<NoteScreen> {
   @override
   void initState() {
     super.initState();
+    noteTextController.addListener(saveNote);
     Future.microtask(() async {
       sharedPreferences = await SharedPreferences.getInstance();
       loadSavedNote(widget.noteName);
@@ -46,8 +47,8 @@ class _NoteScreenState extends State<NoteScreen> {
     noteTextController.text = sharedPreferences.getString(noteName) ?? '';
   }
 
-  void saveNote(String noteName) {
-    sharedPreferences.setString(noteName, noteTextController.text);
+  void saveNote() {
+    sharedPreferences.setString(widget.noteName, noteTextController.text);
   }
 
   @override
