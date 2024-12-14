@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hitung/src/core/colors.dart';
+import 'package:hitung/src/core/storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'src/main_page.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  // create storage
+  final sharedPreferences = await SharedPreferences.getInstance();
+  Storage.i = Storage(sharedPreferences: sharedPreferences);
+
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,14 +23,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hitung',
       theme: ThemeData.dark().copyWith(
-        // scaffoldBackgroundColor: HitungColor.black,
+        scaffoldBackgroundColor: HitungColor.black,
         appBarTheme: AppBarTheme(
           backgroundColor: HitungColor.black,
           titleTextStyle: TextStyle(color: HitungColor.white),
         ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: HitungColor.burntAmber, // kula color
-          // surface: HitungColor.black,
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: HitungColor.snow,
