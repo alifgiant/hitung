@@ -21,51 +21,34 @@ class NoteDrawer extends StatelessWidget {
             itemCount: noteProvider.noteNames.length,
             itemBuilder: (context, index) => ListTile(
               dense: true,
-              title: Row(
-                children: [
-                  Text(
-                    noteProvider.noteNames[index],
-                    style: TextStyle(
-                      color: noteProvider.noteNames[index] ==
-                              noteProvider.selectedNote
+              title: Text(
+                noteProvider.noteNames[index],
+                style: TextStyle(
+                  color:
+                      noteProvider.noteNames[index] == noteProvider.selectedNote
                           ? Theme.of(context).colorScheme.primary
                           : null,
-                    ),
-                  ),
-                  const SizedBox(width: 2),
-                  IconButton(
-                    visualDensity: VisualDensity(
-                      vertical: VisualDensity.minimumDensity,
-                      horizontal: VisualDensity.minimumDensity,
-                    ),
-                    iconSize: 12,
-                    onPressed: () {},
-                    icon: Icon(Icons.edit),
-                  ),
-                ],
+                ),
               ),
               onTap: () {
                 noteProvider.selectNote(noteProvider.noteNames[index]);
                 Navigator.pop(context);
               },
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton.filledTonal(
-                    visualDensity: VisualDensity(
-                      vertical: VisualDensity.minimumDensity,
-                      horizontal: VisualDensity.minimumDensity,
-                    ),
-                    iconSize: 16,
-                    color: HitungColor.burntAmber,
-                    onPressed: () {
-                      noteProvider.deleteNote(noteProvider.noteNames[index]);
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.delete_forever_rounded),
-                  ),
-                ],
-              ),
+              trailing: noteProvider.noteNames.length > 1
+                  ? IconButton.filledTonal(
+                      visualDensity: VisualDensity(
+                        vertical: VisualDensity.minimumDensity,
+                        horizontal: VisualDensity.minimumDensity,
+                      ),
+                      iconSize: 16,
+                      color: HitungColor.burntAmber,
+                      onPressed: () {
+                        noteProvider.deleteNote(noteProvider.noteNames[index]);
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.delete_forever_rounded),
+                    )
+                  : null,
             ),
           ).expanded(),
           const Divider(),
