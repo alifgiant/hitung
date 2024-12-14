@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hitung/src/core/colors.dart';
 import 'package:hitung/src/core/note_provider.dart';
 import 'package:hitung/src/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoteDrawer extends StatelessWidget {
   final NoteProvider noteProvider;
@@ -99,7 +100,7 @@ class NoteDrawer extends StatelessWidget {
             title: Text('Baca Petunjuk'),
             trailing: IconButton.filledTonal(
               icon: Icon(Icons.search_rounded),
-              onPressed: () {},
+              onPressed: () => launchUrl(Uri.parse('https://alifgiant.notion.site/Hitung-15c835c2e62f8063b088ffea5e88b4b6')),
             ),
           ),
           const SizedBox(height: 12),
