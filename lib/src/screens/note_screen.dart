@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitung/src/core/colors.dart';
 import 'package:hitung/src/core/note_text_controller.dart';
 import 'package:hitung/src/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,14 +19,10 @@ class NoteScreen extends StatefulWidget {
 class _NoteScreenState extends State<NoteScreen> {
   late final SharedPreferences sharedPreferences;
   final NoteTextController noteTextController = NoteTextController();
-  final CalcContextProvider calcContextProvider = CalcContextProvider();
 
   @override
   void initState() {
     super.initState();
-    noteTextController.addListener(
-      () => calcContextProvider.onLineChanged(noteTextController.text),
-    );
     Future.microtask(() async {
       sharedPreferences = await SharedPreferences.getInstance();
       loadSavedNote(widget.noteName);
@@ -42,7 +39,6 @@ class _NoteScreenState extends State<NoteScreen> {
   @override
   void dispose() {
     noteTextController.dispose();
-    calcContextProvider.dispose();
     super.dispose();
   }
 
@@ -67,11 +63,21 @@ class _NoteScreenState extends State<NoteScreen> {
             controller: noteTextController,
           ).expanded(),
           AnimatedBuilder(
-            animation: calcContextProvider,
+            animation: noteTextController.calcContextProvider,
             builder: (context, child) {
               return Column(
-                children: calcContextProvider.calcContexts
-                    .map((e) => Text(e.output))
+                crossAxisAlignment: CrossAxisAlignment.end,
+                spacing: 1,
+                children: noteTextController.calcContextProvider.calcContexts
+                    .map(
+                      (e) => Text(
+                        e.output,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: HitungColor.mantis,
+                        ),
+                      ),
+                    )
                     .toList(),
               ).dynamicFixedWidth(
                 context,

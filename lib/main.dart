@@ -39,8 +39,6 @@ class MyApp extends StatelessWidget {
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
-          // fillColor: Colors.amber,
-          // filled: true,
         ),
         scaffoldBackgroundColor: HitungColor.black,
         useMaterial3: true,
