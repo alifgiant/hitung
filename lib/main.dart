@@ -12,41 +12,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const whiteText = TextStyle(color: HitungColor.white);
-    const snowText = TextStyle(color: Color(0xff3c3c3c));
     return MaterialApp(
       title: 'Hitung',
-      theme: ThemeData(
-        scaffoldBackgroundColor: HitungColor.black,
+      theme: ThemeData.dark().copyWith(
+        // scaffoldBackgroundColor: HitungColor.black,
         appBarTheme: AppBarTheme(
           backgroundColor: HitungColor.black,
-          toolbarTextStyle: snowText,
-          titleTextStyle: snowText,
+          titleTextStyle: TextStyle(color: HitungColor.white),
         ),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Color(0xff9A4532), // kula color
+          seedColor: HitungColor.burntAmber, // kula color
+          // surface: HitungColor.black,
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: HitungColor.snow,
           selectionColor: HitungColor.white.withAlpha(60),
-        ),
-        textTheme: TextTheme(
-          bodySmall: whiteText,
-          bodyMedium: whiteText,
-          bodyLarge: whiteText,
-          labelSmall: whiteText,
-          labelMedium: whiteText,
-          labelLarge: whiteText,
-          displaySmall: whiteText,
-          displayMedium: whiteText,
-          displayLarge: whiteText,
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
         ),
-        useMaterial3: true,
       ),
       home: const MainPage(),
     );
