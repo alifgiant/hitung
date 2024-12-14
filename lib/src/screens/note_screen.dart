@@ -18,10 +18,14 @@ class NoteScreen extends StatefulWidget {
 class _NoteScreenState extends State<NoteScreen> {
   late final SharedPreferences sharedPreferences;
   final NoteTextController noteTextController = NoteTextController();
+  final CalcContextProvider calcContextProvider = CalcContextProvider();
 
   @override
   void initState() {
     super.initState();
+    noteTextController.addListener(
+      () => calcContextProvider.onLineChanged(noteTextController.text),
+    );
     Future.microtask(() async {
       sharedPreferences = await SharedPreferences.getInstance();
       loadSavedNote(widget.noteName);
@@ -38,11 +42,16 @@ class _NoteScreenState extends State<NoteScreen> {
   @override
   void dispose() {
     noteTextController.dispose();
+    calcContextProvider.dispose();
     super.dispose();
   }
 
   void loadSavedNote(String noteName) {
     noteTextController.text = sharedPreferences.getString(noteName) ?? '';
+  }
+
+  void saveNote(String noteName) {
+    sharedPreferences.setString(noteName, noteTextController.text);
   }
 
   @override
@@ -55,10 +64,20 @@ class _NoteScreenState extends State<NoteScreen> {
           TextField(
             maxLines: null,
             expands: true,
+            controller: noteTextController,
           ).expanded(),
-          Column().dynamicFixedWidth(
-            context,
-            width: 200,
+          AnimatedBuilder(
+            animation: calcContextProvider,
+            builder: (context, child) {
+              return Column(
+                children: calcContextProvider.calcContexts
+                    .map((e) => Text(e.output))
+                    .toList(),
+              ).dynamicFixedWidth(
+                context,
+                width: 200,
+              );
+            },
           ),
         ],
       ),
