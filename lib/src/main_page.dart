@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitung/src/screens/note_screen.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -9,6 +10,7 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Main Page'),
       ),
+      body: NoteScreen(noteName: 'main-note'),
     );
   }
 }
