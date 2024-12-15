@@ -19,11 +19,26 @@ class NoteTextController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    // TODO: implement buildTextSpan
-    return super.buildTextSpan(
-      context: context,
+    return TextSpan(
+      children: _buildTextSpans(text, style),
       style: style,
-      withComposing: withComposing,
+    );
+  }
+
+  List<TextSpan> _buildTextSpans(String text, TextStyle? style) {
+    final lines = text.split('\n');
+    return [
+      for (int i = 0; i < lines.length; i++) _buildLine(i, lines[i], style),
+    ];
+  }
+
+  TextSpan _buildLine(int lineIndex, String text, TextStyle? style) {
+    return TextSpan(
+      children: [
+        TextSpan(text: text),
+        TextSpan(text: '\n'),
+      ],
+      style: style,
     );
   }
 

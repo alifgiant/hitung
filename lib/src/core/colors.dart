@@ -6,4 +6,5 @@ mixin HitungColor {
   static const white = Color(0xFFFCFCFC);
   static const mantis = Color(0xFF7AC74F);
   static const burntAmber = Color(0xFF8C271E);
+  static const teal = Color(0xFF087e8b);
 }

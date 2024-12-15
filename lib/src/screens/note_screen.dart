@@ -78,7 +78,7 @@ class _NoteScreenState extends State<NoteScreen> {
                 children: noteTextController.calcContextProvider.calcContexts
                     .map(
                       (e) => Text(
-                        e.output,
+                        '${e.output}\n',
                         style: TextStyle(
                           fontSize: 16,
                           color: HitungColor.mantis,
