@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           backgroundColor: HitungColor.black,
           titleTextStyle: TextStyle(color: HitungColor.white),
+          iconTheme: IconThemeData(color: HitungColor.white, size: 14),
+          actionsIconTheme: IconThemeData(color: HitungColor.white, size: 14),
         ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: HitungColor.burntAmber, // kula color

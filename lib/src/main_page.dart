@@ -32,27 +32,9 @@ class _MainPageState extends State<MainPage> {
       builder: (context, child) {
         return Scaffold(
           endDrawer: NoteDrawer(noteProvider: noteProvider),
-          bottomNavigationBar: Builder(builder: (ctx) {
-            return BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calculate),
-                  label: 'Hitung',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Pengaturan',
-                ),
-              ],
-              onTap: (pos) {
-                if (pos == 1) Scaffold.of(ctx).openEndDrawer();
-              },
-            );
-          }),
           appBar: AppBar(
             toolbarHeight: 32,
             title: Text(noteProvider.selectedNote),
-            actions: [SizedBox()],
           ),
           body: NoteScreen(noteName: noteProvider.selectedNote),
         );
