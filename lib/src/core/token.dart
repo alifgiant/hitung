@@ -14,12 +14,17 @@ class TokenType {
     RegExp(r'(.*[^\s])\s*=\s*'),
     color: HitungColor.teal,
   );
-  static final shortNum = TokenType._(
-    RegExp(r'([0-9]+(\.[0-9]*)?)[kmb]', caseSensitive: false),
-  );
   static final variable = TokenType._(
     RegExp(r''),
     color: HitungColor.teal,
+  );
+  static final sum = TokenType._(
+    RegExp(r''),
+    color: HitungColor.burntAmber,
+  );
+
+  static final shortNum = TokenType._(
+    RegExp(r'([0-9]+(\.[0-9]*)?)[kmb]', caseSensitive: false),
   );
   static final expression = TokenType._(RegExp(r''));
 }

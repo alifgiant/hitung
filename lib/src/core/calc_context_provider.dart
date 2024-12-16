@@ -57,7 +57,7 @@ class CalcContextProvider with ChangeNotifier {
       };
 
       // evaluate line and get result
-      final hitungTokens = _tokenize(line, newContext);
+      final hitungTokens = _tokenize(line, pos, newContext);
       final expToken = hitungTokens.last;
       final result = newContext.evaluate(
         _parser,
@@ -85,7 +85,7 @@ class CalcContextProvider with ChangeNotifier {
     }
   }
 
-  List<Token> _tokenize(String line, ContextModel context) {
+  List<Token> _tokenize(String line, int pos, ContextModel context) {
     // check wether line is empty
     if (line.trim().isEmpty) {
       return [Token(text: '', type: TokenType.expression, start: -1)];
@@ -99,11 +99,13 @@ class CalcContextProvider with ChangeNotifier {
     Token? assignmentToken;
     if (match != null) {
       final varName = match.group(1)!;
-      assignmentToken = Token(
-        text: varName,
-        type: TokenType.assignment,
-        start: match.start,
-      );
+      if (!varName.contains(' ')) {
+        assignmentToken = Token(
+          text: varName,
+          type: TokenType.assignment,
+          start: match.start,
+        );
+      }
       processedLine = processedLine.substring(match.end);
     }
 
@@ -134,17 +136,6 @@ class CalcContextProvider with ChangeNotifier {
       },
     );
 
-    final variableTokens = context.variables.keys.map(
-      (variable) {
-        final varIndex = processedLine.indexOf(variable);
-        return Token(
-          text: variable,
-          type: TokenType.variable,
-          start: varIndex + startIndex,
-        );
-      },
-    );
-
     for (var shorNumToken in shortNumTokens) {
       final multiplier =
           switch (shorNumToken.text.characters.last.toLowerCase()) {
@@ -163,11 +154,47 @@ class CalcContextProvider with ChangeNotifier {
       );
     }
 
+    // check wether line has variables
+    final variableTokens = context.variables.keys.map(
+      (variable) {
+        final varIndex = processedLine.indexOf(variable);
+        return Token(
+          text: variable,
+          type: TokenType.variable,
+          start: varIndex + startIndex,
+        );
+      },
+    );
+
+    // check wether line is a sum function
+    Token? sumToken;
+    if (processedLine.toLowerCase().trim() == 'sum') {
+      final sumText = processedLine.trim();
+      sumToken = Token(
+        text: sumText,
+        type: TokenType.sum,
+        start: processedLine.indexOf(sumText) + startIndex,
+      );
+
+      int prevPos = pos - 1;
+      List<num> prevResult = [];
+      while (prevPos >= 0 &&
+          prevPos < calcContexts.length &&
+          calcContexts[prevPos].output.isNotEmpty) {
+        final resultNum = _numberFormat.tryParse(calcContexts[prevPos].output);
+        prevResult.add(resultNum ?? 0);
+        prevPos--;
+      }
+
+      processedLine = prevResult.join('+'); // create sum expression
+    }
+
     return [
       if (assignmentToken != null) assignmentToken,
       ...shortNumTokens,
       ...variableTokens,
       if (commentToken != null) commentToken,
+      if (sumToken != null) sumToken,
       Token(text: processedLine, type: TokenType.expression, start: -1),
     ];
   }
