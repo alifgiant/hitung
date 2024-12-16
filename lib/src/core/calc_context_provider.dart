@@ -65,7 +65,7 @@ class CalcContextProvider with ChangeNotifier {
         expToken.text,
       );
       if (hitungTokens.first.type == TokenType.assignment) {
-        final resultNum = num.tryParse(result) ?? 0;
+        final resultNum = _numberFormat.tryParse(result) ?? 0; 
         newContext.bindVariableName(hitungTokens.first.text, Number(resultNum));
       }
       final calcContext = CalcContext(
@@ -93,7 +93,7 @@ class CalcContextProvider with ChangeNotifier {
 
     // check wether line has assignment at starts
     final match = TokenType.assignment.regex.matchAsPrefix(line);
-    final startIndex = match != null ? match.start : 0;
+    final startIndex = match != null ? match.end : 0;
     Token? assignmentToken;
     if (match != null) {
       final varName = match.group(1)!;
@@ -166,7 +166,7 @@ class CalcContextProvider with ChangeNotifier {
       ...shortNumTokens,
       ...variableTokens,
       if (commentToken != null) commentToken,
-      Token(text: processedLine, type: TokenType.expression, start: startIndex),
+      Token(text: processedLine, type: TokenType.expression, start: -1),
     ];
   }
 }
