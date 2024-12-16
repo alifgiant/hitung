@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitung/src/core/token.dart';
 
 import 'calc_context_provider.dart';
 
@@ -28,25 +29,36 @@ class NoteTextController extends TextEditingController {
   List<TextSpan> _buildTextSpans(String text, TextStyle? style) {
     final lines = text.split('\n');
     return [
-      for (int i = 0; i < lines.length; i++) _buildLine(i, lines[i], style),
+      for (int i = 0; i < lines.length; i++) _buildLine(i, lines, style),
     ];
   }
 
-  TextSpan _buildLine(int lineIndex, String text, TextStyle? style) {
+  TextSpan _buildLine(int lineIndex, List<String> lines, TextStyle? style) {
+    final text = lines[lineIndex];
     List<InlineSpan> children = [];
     if (calcContextProvider.calcContexts.isEmpty) {
       children.add(TextSpan(text: text, style: style));
     } else {
       final context = calcContextProvider.calcContexts[lineIndex];
       final tokens = context.tokens.toList();
-      tokens.removeLast();
+      // tokens.removeLast();
+      tokens.removeWhere(
+        (element) {
+          final isExpression = element.type == TokenType.expression;
+          // dont need render unfound variable
+          final notFoundVar = !text.contains(element.text);
+          return isExpression || notFoundVar;
+        },
+      );
       tokens.sort((a, b) => a.start.compareTo(b.start));
-      if (tokens.isEmpty) {
+
+      if (text.isEmpty || tokens.isEmpty) {
         children.add(TextSpan(text: text, style: style));
       } else {
         int start = 0;
         for (int i = 0; i < tokens.length; i++) {
           final token = tokens[i];
+
           final startToken = token.start;
           final endToken = token.start + token.text.length;
           children.add(
@@ -69,7 +81,7 @@ class NoteTextController extends TextEditingController {
     return TextSpan(
       children: [
         ...children,
-        TextSpan(text: '\n'),
+        if (lineIndex < lines.length) TextSpan(text: '\n'),
       ],
       style: style,
     );

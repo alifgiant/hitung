@@ -65,7 +65,7 @@ class CalcContextProvider with ChangeNotifier {
         expToken.text,
       );
       if (hitungTokens.first.type == TokenType.assignment) {
-        final resultNum = _numberFormat.tryParse(result) ?? 0; 
+        final resultNum = _numberFormat.tryParse(result) ?? 0;
         newContext.bindVariableName(hitungTokens.first.text, Number(resultNum));
       }
       final calcContext = CalcContext(
@@ -87,7 +87,9 @@ class CalcContextProvider with ChangeNotifier {
 
   List<Token> _tokenize(String line, ContextModel context) {
     // check wether line is empty
-    if (line.trim().isEmpty) return [];
+    if (line.trim().isEmpty) {
+      return [Token(text: '', type: TokenType.expression, start: -1)];
+    }
 
     String processedLine = line;
 
