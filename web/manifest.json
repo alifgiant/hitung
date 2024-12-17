@@ -3,9 +3,9 @@
     "short_name": "hitung",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#181719",
+    "theme_color": "#181719",
+    "description": "Aplikasi ini dikembangkan untuk membantu Anda melakukan perhitungan matematika dengan mudah dan menyimpannya dalam bentuk catatan",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
