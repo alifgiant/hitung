@@ -47,7 +47,14 @@ class _NoteScreenState extends State<NoteScreen> {
   }
 
   void loadSavedNote(String noteName) {
-    noteTextController.text = storage.getNoteContent(noteName);
+    final isInitialLoad = storage.isInitialLoad();
+    final savedContent = storage.getNoteContent(noteName);
+    final defaultContent = '// menghitung luas segitiga\n'
+        'alas = 4\n'
+        'tinggi = 10\n'
+        'luas = 1/2 * alas * tinggi\n'
+        'sum';
+    noteTextController.text = isInitialLoad ? defaultContent : savedContent;
   }
 
   void saveNote() {
@@ -66,12 +73,6 @@ class _NoteScreenState extends State<NoteScreen> {
               maxLines: null,
               expands: true,
               controller: noteTextController,
-              decoration: InputDecoration(
-                hintText: 'alas = 4\n'
-                    'tinggi = 10\n'
-                    'luas = 1/2 * alas * tinggi\n'
-                    'sum',
-              ),
             ).expanded()
           else
             Center(child: Text('Silahkan buat catatan')).expanded(),

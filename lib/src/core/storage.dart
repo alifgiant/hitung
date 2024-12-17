@@ -64,4 +64,8 @@ class Storage {
         _sharedPreferences.remove('selected-notes'),
     ]);
   }
+
+  bool isInitialLoad() {
+    return !_sharedPreferences.containsKey('note:$_defaultNote');
+  }
 }

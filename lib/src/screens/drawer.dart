@@ -57,55 +57,77 @@ class NoteDrawer extends StatelessWidget {
             title: Text('Tambah Catatan'),
             trailing: IconButton.filledTonal(
               icon: Icon(Icons.add_rounded),
-              onPressed: () async {
-                final title = await showDialog<String>(
-                  context: context,
-                  builder: (context) {
-                    String name = '';
-                    return AlertDialog(
-                      title: Text(
-                        'Tambah Catatan',
-                        style: TextStyle(color: HitungColor.black),
-                      ),
-                      content: TextField(
-                        style: TextStyle(color: HitungColor.black),
-                        cursorColor: HitungColor.black,
-                        decoration: InputDecoration(
-                          labelText: 'Nama catatan',
-                          hintText: 'Catatan 2',
-                          border: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) => name = value,
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Batal'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, name),
-                          child: Text('Simpan'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-                if (title == null) return;
-                noteProvider.createNote(title);
-              },
+              onPressed: () => showCreateNoteDialog(context),
             ),
           ),
           ListTile(
             title: Text('Baca Petunjuk'),
             trailing: IconButton.filledTonal(
               icon: Icon(Icons.search_rounded),
-              onPressed: () => launchUrl(Uri.parse('https://alifgiant.notion.site/Hitung-15c835c2e62f8063b088ffea5e88b4b6')),
+              onPressed: () => launchUrl(
+                Uri.parse(
+                  'https://alifgiant.notion.site/Hitung-15c835c2e62f8063b088ffea5e88b4b6',
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 12),
         ],
       ),
     );
+  }
+
+  Future<void> showCreateNoteDialog(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    final title = await showDialog<String>(
+      context: context,
+      builder: (ctx) {
+        String name = '';
+        return AlertDialog(
+          title: Text(
+            'Tambah Catatan',
+            style: TextStyle(color: HitungColor.black),
+          ),
+          content: TextField(
+            style: TextStyle(color: HitungColor.black),
+            cursorColor: HitungColor.black,
+            decoration: InputDecoration(
+              labelText: 'Nama catatan',
+              hintText: 'Catatan 2',
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(),
+            ),
+            onChanged: (value) => name = value,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, name),
+              child: Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (title == null) return;
+    if (noteProvider.noteNames.contains(title)) {
+      navigator.pop();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Catatan sudah ada, silahkan buat catatan lain',
+          ),
+        ),
+      );
+    } else {
+      noteProvider.createNote(title);
+      navigator.pop();
+    }
   }
 }
