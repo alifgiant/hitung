@@ -10,9 +10,7 @@ extension WidgetExt on Widget {
   }
 
   Widget fixedWidth({double width = 550}) {
-    return Center(
-      child: SizedBox(width: width, child: this),
-    );
+    return SizedBox(width: width, child: this);
   }
 
   Widget left() => Align(alignment: Alignment.bottomLeft, child: this);

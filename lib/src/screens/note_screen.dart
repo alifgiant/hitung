@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitung/src/core/calc_context.dart';
 import 'package:hitung/src/core/colors.dart';
 import 'package:hitung/src/core/note_text_controller.dart';
 import 'package:hitung/src/core/storage.dart';
@@ -19,6 +20,7 @@ class NoteScreen extends StatefulWidget {
 
 class _NoteScreenState extends State<NoteScreen> {
   late final Storage storage;
+  final Key _key = GlobalKey();
   final NoteTextController noteTextController = NoteTextController();
 
   @override
@@ -69,42 +71,69 @@ class _NoteScreenState extends State<NoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.noteName.isNotEmpty)
-            TextField(
-              maxLines: null,
-              expands: true,
-              controller: noteTextController,
-            ).expanded()
-          else
-            Center(child: Text('Silahkan buat catatan')).expanded(),
-          AnimatedBuilder(
-            animation: noteTextController.calcContextProvider,
-            builder: (context, child) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                spacing: 1,
-                children: [
-                  const SizedBox(height: 1),
-                  ...noteTextController.calcContextProvider.calcContexts.map(
-                    (e) => Text(
-                      e.output,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: HitungColor.mantis,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ).dynamicFixedWidth(context, width: 200),
-        ],
+    const padding = 12.0;
+    final screenWidth = context.width - (padding * 2);
+    final targetResultWidth = 500.0;
+    final resultWidth = screenWidth >= targetResultWidth * 3
+        ? targetResultWidth
+        : screenWidth * 0.3;
+    final expWidth = screenWidth - resultWidth;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.noteName.isNotEmpty)
+          TextField(
+            key: _key,
+            maxLines: null,
+            expands: true,
+            controller: noteTextController,
+            style: _style,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.zero,
+              isDense: true
+            ),
+          ).expanded()
+        else
+          Center(
+            child: Text('Silahkan buat catatan'),
+          ).expanded(),
+        AnimatedBuilder(
+          animation: noteTextController.calcContextProvider,
+          builder: (context, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                ...noteTextController.calcContextProvider.calcContexts
+                    .map((e) => _buildResult(e, expWidth)),
+              ],
+            );
+          },
+        ).fixedWidth(width: resultWidth),
+      ],
+    ).allPadding(padding);
+  }
+
+  Widget _buildResult(CalcContext calcContext, double expWidth) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: calcContext.input, style: _style),
+      textDirection: TextDirection.ltr,
+      maxLines: null,
+    );
+    textPainter.layout(maxWidth: expWidth - 36);
+
+    // Get line height
+    double lineHeight = textPainter.height;
+
+    return SizedBox(
+      height: lineHeight,
+      child: Text(
+        calcContext.output,
+        style: _style.copyWith(color: HitungColor.mantis),
       ),
     );
   }
 }
+
+// Match TextField style
+const _style = TextStyle(fontSize: 16, height: 1.6);
