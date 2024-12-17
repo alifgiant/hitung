@@ -80,9 +80,14 @@ class CalcContextProvider with ChangeNotifier {
 
       // insert new context
       calcContexts.insert(pos, calcContext);
-
-      notifyListeners();
     }
+
+    // remove extra context
+    if (calcContexts.length > lines.length) {
+      calcContexts.removeRange(lines.length, calcContexts.length);
+    }
+
+    notifyListeners();
   }
 
   List<Token> _tokenize(String line, int pos, ContextModel context) {
