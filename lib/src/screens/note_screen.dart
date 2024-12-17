@@ -49,11 +49,17 @@ class _NoteScreenState extends State<NoteScreen> {
   void loadSavedNote(String noteName) {
     final isInitialLoad = storage.isInitialLoad();
     final savedContent = storage.getNoteContent(noteName);
-    final defaultContent = '// menghitung luas segitiga\n'
-        'alas = 4\n'
-        'tinggi = 10\n'
-        'luas = 1/2 * alas * tinggi\n'
-        'sum';
+    final defaultContent = [
+      '// menghitung luas segitiga',
+      'alas = 4',
+      'tinggi = 10',
+      'luas = 1/2 * alas * tinggi',
+      '',
+      '// penjumlahan',
+      '20m',
+      '-100k',
+      'sum',
+    ].join('\n');
     noteTextController.text = isInitialLoad ? defaultContent : savedContent;
   }
 
@@ -82,17 +88,18 @@ class _NoteScreenState extends State<NoteScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 spacing: 1,
-                children: noteTextController.calcContextProvider.calcContexts
-                    .map(
-                      (e) => Text(
-                        e.output,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: HitungColor.mantis,
-                        ),
+                children: [
+                  const SizedBox(height: 1),
+                  ...noteTextController.calcContextProvider.calcContexts.map(
+                    (e) => Text(
+                      e.output,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: HitungColor.mantis,
                       ),
-                    )
-                    .toList(),
+                    ),
+                  ),
+                ],
               );
             },
           ).dynamicFixedWidth(context, width: 200),
